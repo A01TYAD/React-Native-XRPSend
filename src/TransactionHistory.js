@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import _ from 'lodash';
 const ripple = require('../ripple');
 
 export default class TransactionHistory extends React.Component {
