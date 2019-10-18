@@ -5,7 +5,7 @@ import Snackbar from 'react-native-snackbar';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const ripple = require('../ripple');
 
-var xrplServer = 'wss://s.altnet.rippletest.net:51233'
+var xrplServer = 'wss://testnet.xrpl-labs.com'//'wss://s.altnet.rippletest.net:51233'
 var fee = 0;
 var xrpAmount = 0;
 var memo = null;
@@ -34,19 +34,21 @@ api.on('error', (errorCode, errorMessage) => {
       title:errorCode + ': ' + errorMessage,
       duration: Snackbar.LENGTH_SHORT,
    });
+   console.log(errorCode + ': ' + errorMessage)
 });
 
 api.on('connected', () => {
-    //Alert.alert('connected');
+    console.log('Connected to XRPL');
 });
 
-api.on('\n disconnected', (code) => {
+api.on('disconnected', (code) => {
     // code - [close code](https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent) sent by the server
     // will be 1000 if this was normal closure
     Snackbar.show({
        title: 'disconnected, code: '+ code,
        duration: Snackbar.LENGTH_SHORT,
     });
+    console.log('Disconnected from XRPL');
 });
 
 api.on('ledger', ledger => {
@@ -56,7 +58,7 @@ api.on('ledger', ledger => {
       txStatus(tranxID, earliestLedgerVersion);
     }
   }else if(ledger.ledgerVersion > maxLedgerVersion && checkTxStatus==0){
-      //Alert.alert("Transaction Failed!");
+      console.log('Transaction failed. Ledger version greater than Maxmimum Ledger Version.')
    }
 })
 
@@ -115,6 +117,7 @@ async function doSubmit(txBlob, navigate) {
       const result = await api.submit(txBlob);
       //Alert.alert("Tentative result code:"+ result.resultCode + "\n Tentative result message:" + result.resultMessage);
       if (result.resultCode == 'tesSUCCESS'){
+        console.log('Transaction Sucessfully sent to server for validation.')
         Snackbar.show({
           title:'Transaction Sucessfully sent to server for validation.',
           duration: Snackbar.LENGTH_SHORT,
