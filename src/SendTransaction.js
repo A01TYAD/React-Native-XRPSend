@@ -45,7 +45,7 @@ api.on('disconnected', (code) => {
     // code - [close code](https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent) sent by the server
     // will be 1000 if this was normal closure
     Snackbar.show({
-       title: 'disconnected, code: '+ code,
+       title: 'Disconnected, code: '+ code,
        duration: Snackbar.LENGTH_SHORT,
     });
     console.log('Disconnected from XRPL');
@@ -58,7 +58,11 @@ api.on('ledger', ledger => {
       txStatus(tranxID, earliestLedgerVersion);
     }
   }else if(ledger.ledgerVersion > maxLedgerVersion && checkTxStatus==0){
+      Alert.alert("Transaction failed, Please go back try again.");
+      //resetting max ledgerVersion temporarily for next transaction if previous has passed.
+      maxLedgerVersion = ledger.Version + 1000;
       console.log('Transaction failed. Ledger version greater than Maxmimum Ledger Version.')
+      api.disconnect();
    }
 })
 
@@ -102,6 +106,7 @@ async function doPrepare(navigate) {
       const tx_fee_info = preparedTx.instructions.fee
       console.log("Prepared transaction instructions:", preparedTx.txJSON)
       console.log("Transaction expires after ledger:", maxLedgerVersion)
+
       const response = api.sign(preparedTx.txJSON, secretKey);
       const txID = response.id;
       tranxID = txID;
@@ -123,6 +128,8 @@ async function doSubmit(txBlob, navigate) {
           duration: Snackbar.LENGTH_SHORT,
        });
        navigate('Send');
+      }else{
+        console.log('Tentative result message: ',result.resultCode);
       }
 
       // Return the earliest ledger index this transaction could appear in
@@ -133,23 +140,20 @@ async function doSubmit(txBlob, navigate) {
        
     }
     
-async function txStatus(txID, earliestLedgerVersion){
+async function txStatus(txID, earliestLedgerVersion, isUnderMaxLedgerLimit){
     try {
-        const tx = await api.getTransaction(txID, {minLedgerVersion: earliestLedgerVersion})
-        if(tx.outcome.result == 'tesSUCCESS' && checkTxStatus == 0){
-          checkTxStatus = 1;
-          earliestLedgerVersion = 0;
-          Alert.alert("Transaction Validated Succesfully!");
-          console.log("Transaction result:", tx.outcome.result);
-          console.log("Balance changes:", JSON.stringify(tx.outcome.balanceChanges));
-        }
+      const tx = await api.getTransaction(txID, {minLedgerVersion: earliestLedgerVersion})
+      if(tx.outcome.result == 'tesSUCCESS' && checkTxStatus == 0){
+        checkTxStatus = 1;
+        earliestLedgerVersion = 0;
+        Alert.alert("Transaction Validated Succesfully!");
+        console.log("Transaction result:", tx.outcome.result);
+        console.log("Balance changes:", JSON.stringify(tx.outcome.balanceChanges));
+        api.disconnect();
+      }
     } catch(error) {
-        Snackbar.show({
-            title: "Couldn't get transaction outcome:" + error,
-            duration: Snackbar.LENGTH_LONG,
-        });
-        console.log("Couldn't get transaction outcome:", error);
-    }
+      console.log("Couldn't get transaction outcome. Transaction not validated yet.", error);
+  }
 }
 
 function toHex(str) {
@@ -300,6 +304,7 @@ class ConfirmScreen extends React.Component {
             <Button
                   onPress={() => {
                     this.props.navigation.navigate('Send');
+                    api.disconnect();
                   }}
                   title="Back"
             />
