@@ -1,0 +1,339 @@
+warning: LF will be replaced by CRLF in android/app/BUCK.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/build.gradle.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/build_defs.bzl.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/proguard-rules.pro.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/src/debug/AndroidManifest.xml.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/src/main/AndroidManifest.xml.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/src/main/java/com/xrpsend/MainActivity.java.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/src/main/java/com/xrpsend/MainApplication.java.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/src/main/res/values/strings.xml.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/app/src/main/res/values/styles.xml.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/build.gradle.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/gradle.properties.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/gradle/wrapper/gradle-wrapper.properties.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/gradlew.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in android/settings.gradle.
+The file will have its original line endings in your working directory.
+[1mdiff --git a/android/app/build.gradle b/android/app/build.gradle[m
+[1mindex 8048847..e5547d8 100644[m
+[1m--- a/android/app/build.gradle[m
+[1m+++ b/android/app/build.gradle[m
+[36m@@ -18,6 +18,9 @@[m [mimport com.android.build.OutputFile[m
+  *   // the entry file for bundle generation[m
+  *   entryFile: "index.android.js",[m
+  *[m
+[32m+[m[32m *   // https://facebook.github.io/react-native/docs/performance#enable-the-ram-format[m
+[32m+[m[32m *   bundleCommand: "ram-bundle",[m
+[32m+[m[32m *[m
+  *   // whether to bundle JS and assets in debug mode[m
+  *   bundleInDebug: false,[m
+  *[m
+[36m@@ -73,7 +76,8 @@[m [mimport com.android.build.OutputFile[m
+  */[m
+ [m
+ project.ext.react = [[m
+[31m-    entryFile: "index.js"[m
+[32m+[m[32m    entryFile: "index.js",[m
+[32m+[m[32m    enableHermes: false,  // clean and rebuild if changing[m
+ ][m
+ [m
+ apply from: "../../node_modules/react-native/react.gradle"[m
+[36m@@ -93,6 +97,28 @@[m [mdef enableSeparateBuildPerCPUArchitecture = false[m
+  */[m
+ def enableProguardInReleaseBuilds = false[m
+ [m
+[32m+[m[32m/**[m
+[32m+[m[32m * The preferred build flavor of JavaScriptCore.[m
+[32m+[m[32m *[m
+[32m+[m[32m * For example, to use the international variant, you can use:[m
+[32m+[m[32m * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`[m
+[32m+[m[32m *[m
+[32m+[m[32m * The international variant includes ICU i18n library and necessary data[m
+[32m+[m[32m * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that[m
+[32m+[m[32m * give correct results when using with locales other than en-US.  Note that[m
+[32m+[m[32m * this variant is about 6MiB larger per architecture than default.[m
+[32m+[m[32m */[m
+[32m+[m[32mdef jscFlavor = 'org.webkit:android-jsc:+'[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Whether to enable the Hermes VM.[m
+[32m+[m[32m *[m
+[32m+[m[32m * This should be set on project.ext.react and mirrored here.  If it is not set[m
+[32m+[m[32m * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode[m
+[32m+[m[32m * and the benefits of using Hermes will therefore be sharply reduced.[m
+[32m+[m[32m */[m
+[32m+[m[32mdef enableHermes = project.ext.react.get("enableHermes", false);[m
+[32m+[m
+ android {[m
+     compileSdkVersion rootProject.ext.compileSdkVersion[m
+ [m
+[36m@@ -116,8 +142,22 @@[m [mandroid {[m
+             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"[m
+         }[m
+     }[m
+[32m+[m[32m    signingConfigs {[m
+[32m+[m[32m        debug {[m
+[32m+[m[32m            storeFile file('debug.keystore')[m
+[32m+[m[32m            storePassword 'android'[m
+[32m+[m[32m            keyAlias 'androiddebugkey'[m
+[32m+[m[32m            keyPassword 'android'[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+     buildTypes {[m
+[32m+[m[32m        debug {[m
+[32m+[m[32m            signingConfig signingConfigs.debug[m
+[32m+[m[32m        }[m
+         release {[m
+[32m+[m[32m            // Caution! In production, you need to generate your own keystore file.[m
+[32m+[m[32m            // see https://facebook.github.io/react-native/docs/signed-apk-android.[m
+[32m+[m[32m            signingConfig signingConfigs.debug[m
+             minifyEnabled enableProguardInReleaseBuilds[m
+             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"[m
+         }[m
+[36m@@ -126,24 +166,29 @@[m [mandroid {[m
+     applicationVariants.all { variant ->[m
+         variant.outputs.each { output ->[m
+             // For each separate APK per architecture, set a unique version code as described here:[m
+[31m-            // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits[m
+[31m-            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3, "x86_64": 4][m
+[32m+[m[32m            // https://developer.android.com/studio/build/configure-apk-splits.html[m
+[32m+[m[32m            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4][m
+             def abi = output.getFilter(OutputFile.ABI)[m
+             if (abi != null) {  // null for the universal-debug, universal-release variants[m
+                 output.versionCodeOverride =[m
+                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode[m
+             }[m
+[32m+[m
+         }[m
+     }[m
+ }[m
+ [m
+ dependencies {[m
+[31m-    implementation project(':react-native-snackbar')[m
+[31m-    implementation project(':react-native-gesture-handler')[m
+[31m-    implementation project(':@react-native-community_async-storage')[m
+     implementation fileTree(dir: "libs", include: ["*.jar"])[m
+[31m-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"[m
+     implementation "com.facebook.react:react-native:+"  // From node_modules[m
+[32m+[m
+[32m+[m[32m    if (enableHermes) {[m
+[32m+[m[32m        def hermesPath = "../../node_modules/hermes-engine/android/";[m
+[32m+[m[32m        debugImplementation files(hermesPath + "hermes-debug.aar")[m
+[32m+[m[32m        releaseImplementation files(hermesPath + "hermes-release.aar")[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m        implementation jscFlavor[m
+[32m+[m[32m    }[m
+ }[m
+ [m
+ // Run this once to be able to run the application with BUCK[m
+[36m@@ -152,3 +197,5 @@[m [mtask copyDownloadableDepsToLibs(type: Copy) {[m
+     from configurations.compile[m
+     into 'libs'[m
+ }[m
+[32m+[m
+[32m+[m[32mapply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)[m
+[1mdiff --git a/android/app/proguard-rules.pro b/android/app/proguard-rules.pro[m
+[1mindex a92fa17..11b0257 100644[m
+[1m--- a/android/app/proguard-rules.pro[m
+[1m+++ b/android/app/proguard-rules.pro[m
+[36m@@ -8,10 +8,3 @@[m
+ #   http://developer.android.com/guide/developing/tools/proguard.html[m
+ [m
+ # Add any project specific keep options here:[m
+[31m-[m
+[31m-# If your project uses WebView with JS, uncomment the following[m
+[31m-# and specify the fully qualified class name to the JavaScript interface[m
+[31m-# class:[m
+[31m-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {[m
+[31m-#   public *;[m
+[31m-#}[m
+[1mdiff --git a/android/app/src/main/java/com/xrpsend/MainActivity.java b/android/app/src/main/java/com/xrpsend/MainActivity.java[m
+[1mindex 67104d0..9bab6ab 100644[m
+[1m--- a/android/app/src/main/java/com/xrpsend/MainActivity.java[m
+[1m+++ b/android/app/src/main/java/com/xrpsend/MainActivity.java[m
+[36m@@ -4,12 +4,12 @@[m [mimport com.facebook.react.ReactActivity;[m
+ [m
+ public class MainActivity extends ReactActivity {[m
+ [m
+[31m-    /**[m
+[31m-     * Returns the name of the main component registered from JavaScript.[m
+[31m-     * This is used to schedule rendering of the component.[m
+[31m-     */[m
+[31m-    @Override[m
+[31m-    protected String getMainComponentName() {[m
+[31m-        return "XRPSend";[m
+[31m-    }[m
+[32m+[m[32m  /**[m
+[32m+[m[32m   * Returns the name of the main component registered from JavaScript. This is used to schedule[m
+[32m+[m[32m   * rendering of the component.[m
+[32m+[m[32m   */[m
+[32m+[m[32m  @Override[m
+[32m+[m[32m  protected String getMainComponentName() {[m
+[32m+[m[32m    return "XRPSend";[m
+[32m+[m[32m  }[m
+ }[m
+[1mdiff --git a/android/app/src/main/java/com/xrpsend/MainApplication.java b/android/app/src/main/java/com/xrpsend/MainApplication.java[m
+[1mindex 06cb5e8..65e15b1 100644[m
+[1m--- a/android/app/src/main/java/com/xrpsend/MainApplication.java[m
+[1m+++ b/android/app/src/main/java/com/xrpsend/MainApplication.java[m
+[36m@@ -1,42 +1,38 @@[m
+ package com.xrpsend;[m
+ [m
+ import android.app.Application;[m
+[31m-[m
+[32m+[m[32mimport android.content.Context;[m
+[32m+[m[32mimport com.facebook.react.PackageList;[m
+ import com.facebook.react.ReactApplication;[m
+[31m-import com.azendoo.reactnativesnackbar.SnackbarPackage;[m
+[31m-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;[m
+[31m-import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;[m
+ import com.facebook.react.ReactNativeHost;[m
+ import com.facebook.react.ReactPackage;[m
+[31m-import com.facebook.react.shell.MainReactPackage;[m
+ import com.facebook.soloader.SoLoader;[m
+[31m-[m
+[31m-import java.util.Arrays;[m
+[32m+[m[32mimport java.lang.reflect.InvocationTargetException;[m
+ import java.util.List;[m
+ [m
+ public class MainApplication extends Application implements ReactApplication {[m
+ [m
+[31m-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {[m
+[31m-    @Override[m
+[31m-    public boolean getUseDeveloperSupport() {[m
+[31m-      return BuildConfig.DEBUG;[m
+[31m-    }[m
+[32m+[m[32m  private final ReactNativeHost mReactNativeHost =[m
+[32m+[m[32m      new ReactNativeHost(this) {[m
+[32m+[m[32m        @Override[m
+[32m+[m[32m        public boolean getUseDeveloperSupport() {[m
+[32m+[m[32m          return BuildConfig.DEBUG;[m
+[32m+[m[32m        }[m
+ [m
+[31m-    @Override[m
+[31m-    protected List<ReactPackage> getPackages() {[m
+[31m-      return Arrays.<ReactPackage>asList([m
+[31m-          new MainReactPackage(),[m
+[31m-            new SnackbarPackage(),[m
+[31m-            new RNGestureHandlerPackage(),[m
+[31m-            new AsyncStoragePackage()[m
+[31m-      );[m
+[31m-    }[m
+[32m+[m[32m        @Override[m
+[32m+[m[32m        protected List<ReactPackage> getPackages() {[m
+[32m+[m[32m          @SuppressWarnings("UnnecessaryLocalVariable")[m
+[32m+[m[32m          List<ReactPackage> packages = new PackageList(this).getPackages();[m
+[32m+[m[32m          // Packages that cannot be autolinked yet can be added manually here, for example:[m
+[32m+[m[32m          // packages.add(new MyReactNativePackage());[m
+[32m+[m[32m          return packages;[m
+[32m+[m[32m        }[m
+ [m
+[31m-    @Override[m
+[31m-    protected String getJSMainModuleName() {[m
+[31m-      return "index";[m
+[31m-    }[m
+[31m-  };[m
+[32m+[m[32m        @Override[m
+[32m+[m[32m        protected String getJSMainModuleName() {[m
+[32m+[m[32m          return "index";[m
+[32m+[m[32m        }[m
+[32m+[m[32m      };[m
+ [m
+   @Override[m
+   public ReactNativeHost getReactNativeHost() {[m
+[36m@@ -47,5 +43,32 @@[m [mpublic class MainApplication extends Application implements ReactApplication {[m
+   public void onCreate() {[m
+     super.onCreate();[m
+     SoLoader.init(this, /* native exopackage */ false);[m
+[32m+[m[32m    initializeFlipper(this); // Remove this line if you don't want Flipper enabled[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  /**[m
+[32m+[m[32m   * Loads Flipper in React Native templates.[m
+[32m+[m[32m   *[m
+[32m+[m[32m   * @param context[m
+[32m+[m[32m   */[m
+[32m+[m[32m  private static void initializeFlipper(Context context) {[m
+[32m+[m[32m    if (BuildConfig.DEBUG) {[m
+[32m+[m[32m      try {[m
+[32m+[m[32m        /*[m
+[32m+[m[32m         We use reflection here to pick up the class that initializes Flipper,[m
+[32m+[m[32m        since Flipper library is not available in release mode[m
+[32m+[m[32m        */[m
+[32m+[m[32m        Class<?> aClass = Class.forName("com.facebook.flipper.ReactNativeFlipper");[m
+[32m+[m[32m        aClass.getMethod("initializeFlipper", Context.class).invoke(null, context);[m
+[32m+[m[32m      } catch (ClassNotFoundException e) {[m
+[32m+[m[32m        e.printStackTrace();[m
+[32m+[m[32m      } catch (NoSuchMethodException e) {[m
+[32m+[m[32m        e.printStackTrace();[m
+[32m+[m[32m      } catch (IllegalAccessException e) {[m
+[32m+[m[32m        e.printStackTrace();[m
+[32m+[m[32m      } catch (InvocationTargetException e) {[m
+[32m+[m[32m        e.printStackTrace();[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }[m
+   }[m
+ }[m
+[1mdiff --git a/android/app/src/main/res/values/styles.xml b/android/app/src/main/res/values/styles.xml[m
+[1mindex 319eb0c..62fe59f 100644[m
+[1m--- a/android/app/src/main/res/values/styles.xml[m
+[1m+++ b/android/app/src/main/res/values/styles.xml[m
+[36m@@ -3,6 +3,7 @@[m
+     <!-- Base application theme. -->[m
+     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">[m
+         <!-- Customize your theme here. -->[m
+[32m+[m[32m        <item name="android:textColor">#000000</item>[m
+     </style>[m
+ [m
+ </resources>[m
+[1mdiff --git a/android/build.gradle b/android/build.gradle[m
+[1mindex c6e7c7c..28f7ec6 100644[m
+[1m--- a/android/build.gradle[m
+[1m+++ b/android/build.gradle[m
+[36m@@ -6,14 +6,13 @@[m [mbuildscript {[m
+         minSdkVersion = 16[m
+         compileSdkVersion = 28[m
+         targetSdkVersion = 28[m
+[31m-        supportLibVersion = "28.0.0"[m
+     }[m
+     repositories {[m
+         google()[m
+         jcenter()[m
+     }[m
+     dependencies {[m
+[31m-        classpath 'com.android.tools.build:gradle:3.3.1'[m
+[32m+[m[32m        classpath("com.android.tools.build:gradle:3.4.2")[m
+ [m
+         // NOTE: Do not place your application dependencies here; they belong[m
+         // in the individual module build.gradle files[m
+[36m@@ -23,11 +22,17 @@[m [mbuildscript {[m
+ allprojects {[m
+     repositories {[m
+         mavenLocal()[m
+[31m-        google()[m
+[31m-        jcenter()[m
+         maven {[m
+             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm[m
+[31m-            url "$rootDir/../node_modules/react-native/android"[m
+[32m+[m[32m            url("$rootDir/../node_modules/react-native/android")[m
+[32m+[m[32m        }[m
+[32m+[m[32m        maven {[m
+[32m+[m[32m            // Android JSC is installed from npm[m
+[32m+[m[32m            url("$rootDir/../node_modules/jsc-android/dist")[m
+         }[m
+[32m+[m
+[32m+[m
