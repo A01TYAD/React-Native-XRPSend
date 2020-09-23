@@ -2,7 +2,8 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, Alert, TextInput} from 'react-native';
 import Snackbar from 'react-native-snackbar';
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import {createStackNavigator} from "react-navigation-stack";
+import {createAppContainer} from "react-navigation";
 const ripple = require('../ripple');
 
 var xrplServer = 'wss://testnet.xrpl-labs.com'//'wss://s.altnet.rippletest.net:51233'
@@ -321,7 +322,7 @@ const AppStackNavigator = createStackNavigator({
 },
 {
   initialRouteName: 'Send',
-  headerLayoutPreset: 'center',
+  headerTitleAlign: 'center',
 });
 const AppContainer = createAppContainer(AppStackNavigator);
 
