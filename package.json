@@ -9,7 +9,7 @@
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
     "buffer": "^5.6.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "npm-check-updates": "^9.0.1",
     "react": "16.13.1",
     "react-native": "0.63.2",
